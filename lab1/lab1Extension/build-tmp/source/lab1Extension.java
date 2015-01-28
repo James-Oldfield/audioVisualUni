@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import peasy.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -14,11 +16,15 @@ import java.io.IOException;
 
 public class lab1Extension extends PApplet {
 
+// peasy cam
+
+PeasyCam cam;
+
 // Global variables 
 int tileCount = 10;
 int tileSize = 50;
 // Amount to distort squares by
-int meshDist  = 5;
+int meshDist  = 10;
 // Z grid location for 3D
 float z = 20;
 
@@ -28,6 +34,7 @@ PImage myTexture;
 
 public void setup() {
 	size(750, 750, P3D);
+	cam = new PeasyCam(this, 0, 0, 0, 50);
 
 	myTexture = loadImage("texture.jpg");
 	textureMode(NORMAL);
@@ -46,7 +53,6 @@ public void setup() {
 
 public void draw() {
 	background(255);
-	translate(175, 175);
 	rotateX(0.75f);
 	scale(0.75f);
 	// Iterate through number of tiles
