@@ -2,9 +2,9 @@
  * 3D mesh landscape with texture mapping. Includes peasy cam && control p5 for manipulation of the variables and a better 3D view.
  *
  * @param {int} tileCount - The number of tiles on the grid.
- * @param {int} tileSize - The size of the tiles on the grid.
- * @param {int} meshDist - Amount to distort squares by.
- * @param {float} z - Z grid location for 3D.
+ * @param {int} tileSize  - The size of the tiles on the grid.
+ * @param {int} meshDist  - Amount to distort squares by.
+ * @param {float} z       - Z grid location for 3D.
  * @remote - https://github.com/James-Oldfield/audioVisualUni/blob/master/lab1/lab1Extension/lab1Extension.pde
  *
  */
@@ -28,14 +28,15 @@ PVector[][] nodes = new PVector[tileCount+1][tileCount+1];
 PImage myTexture;
 
 void setup() {
-	size(750, 750, P3D);
+  size(750, 750, P3D);
+	smooth();
 	// instantiate library objects
 	cam = new PeasyCam(this, 1000);
 	cp5 = new ControlP5(this);
 
 	cp5.addSlider("meshDist")
 		.setPosition(100,50)
-		.setRange(0,255);
+		.setRange(0,50);
 	cp5.setAutoDraw(false);
 
 	myTexture = loadImage("texture.jpg");
@@ -83,7 +84,7 @@ void loadNodes(){
 /**
  * Draws the GUI separate outside of matrix stack as to remain static.
  */
-void drawGUI(){
+void drawGUI() {
 	hint(DISABLE_DEPTH_TEST);
 	cam.beginHUD();
 	cp5.draw();
@@ -91,10 +92,14 @@ void drawGUI(){
 	hint(ENABLE_DEPTH_TEST);
 }
 
-void keyPressed() {
-	if (key == CODED) {
-		if (keyCode == UP) {
-			loadNodes();
-		}
-	}
+/**
+ * Recalls the loadNodes function when slider is dragged
+ */
+void mouseDragged() {
+  if (mouseX >= 100 && 
+  	  mouseX <= 200 &&
+  	  mouseY >= 50 &&
+  	  mouseY <= 75) {
+    loadNodes();
+  }
 }
