@@ -66,8 +66,9 @@ public void setup() {
 
 public void draw() {
 	background(255);
-
+	lights();
 	pushMatrix();
+		cam.setMouseControlled(true);
 		rotateX(0.75f);
 		// Iterate through number of tiles
 		for (int y = 0; y < tileCount; y ++) {
@@ -75,8 +76,8 @@ public void draw() {
 			texture(myTexture);
 			// iterate through the number of grid points
 			for (int x = 0; x <= tileCount; x++) {
-				vertex(nodes[x][y].x, nodes[x][y].y, nodes[x][y].z, 1, 0);
-				vertex(nodes[x][y+1].x, nodes[x][y+1].y, nodes[x][y+1].z, 1, 1);
+				vertex(nodes[x][y].x, nodes[x][y].y, nodes[x][y].z, 0, 0);
+				vertex(nodes[x][y+1].x, nodes[x][y+1].y, nodes[x][y+1].z, 0, 1);
 			} 
 			endShape();
 		}
@@ -89,6 +90,7 @@ public void draw() {
  * Distorts each square by the meshDist
  */
 public void loadNodes(){
+	cam.setMouseControlled(false);
 	for (int x = 0; x < tileCount+1; x++) {
 		for (int y = 0; y <= tileCount; y++) {
 			nodes[x][y] = new PVector(
