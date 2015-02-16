@@ -52,7 +52,7 @@ void draw() {
 		rotateX(0.75);
 		// Iterate through number of tiles
 		for (int y = 0; y < tileCount; y ++) {
-			beginShape(QUAD_STRIP);
+			beginShape(TRIANGLE_STRIP);
 			texture(myTexture);
 			// iterate through the number of grid points
 			for (int x = 0; x <= tileCount; x++) {
@@ -70,7 +70,7 @@ void draw() {
  * Distorts each square by the meshDist
  */
 void loadNodes(){
-	cam.setMouseControlled(false);
+
 	for (int x = 0; x < tileCount+1; x++) {
 		for (int y = 0; y <= tileCount; y++) {
 			nodes[x][y] = new PVector(
