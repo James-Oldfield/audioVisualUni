@@ -125,7 +125,7 @@ class Planet {
 		float distance = force.mag();
 
 		// Constrain incase the value is below 1 to prevent extreme outcomes.
-		distance = constrain(distance, 24, 25);
+		distance = constrain(distance, 5, 25);
 
 		// Normalise to find only the direction
 		force.normalize();
@@ -162,6 +162,7 @@ class Moon extends Planet {
 	Moon(int _w, int _myCol, PVector _loc) {
 		// Inherit superclass's constructor
 		super(_w, _myCol, _loc);
+		vel   = new PVector(10,0);
 	}
 
 }

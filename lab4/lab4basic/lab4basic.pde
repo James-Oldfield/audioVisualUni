@@ -109,7 +109,7 @@ class Planet {
 		float distance = force.mag();
 
 		// Constrain incase the value is below 1 to prevent extreme outcomes.
-		distance = constrain(distance, 24, 25);
+		distance = constrain(distance, 5, 25);
 
 		// Normalise to find only the direction
 		force.normalize();

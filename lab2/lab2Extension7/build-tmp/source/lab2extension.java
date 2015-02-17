@@ -14,22 +14,33 @@ import java.io.IOException;
 
 public class lab2extension extends PApplet {
 
-// two integers, s and i, are initalised to 900 and 0 respectively.
-int s=900, i=0;
+// Convolution matrices for image filter effects
+
+PImage img;
+float[][] matrix = {
+	{-1, -1, -1},
+	{-1, 9, -1},
+	{-1, -1, -1},
+};
+
 public void setup() {
-	// 900 is being used as the width of the sketch and P3D is passed as the final method in the size function to enable 3D
-  size(1200, s, P3D);
+	img = loadImage("cat.png");
+	size(img.width, img.height);
 }
+
 public void draw() {
-	// The sketch is translated 600 pixels across and 450 pixels down 
-  translate(600, 450);
-  // x is being rotated by a fraction of the incrementing i value.
-  rotateX(i*.0021f);
-  // Each frame, a gray value increments up to 256 then back to black, with an alpha value of 30. This creates a sudden glowing effect.
-  fill(i++%256, 30);
-  // 
-  sphere(sin(i*.0014f)*s);
-}// #p5
+	image(img, 0, 0);
+
+for (int x = 0; x < width; x++ ) {
+    for (int y = 0; y < height; y++ ) {
+      // Each pixel location (x,y) gets passed into a function called convolution()
+      // The convolution() function returns a new color to be displayed.
+      int c = convolution(x,y,matrix,matrixsize,img); 
+      int loc = x + y*img.width;
+      pixels[loc] = c;
+    }
+  }
+}
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "lab2extension" };
     if (passedArgs != null) {

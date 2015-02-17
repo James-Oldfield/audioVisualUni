@@ -16,7 +16,6 @@ public class lab3Extension1 extends PApplet {
 
 int amp   = 100;
 float s   = 0.00f;
-float[] h;
 
 public void setup() {
 	size(500, 500);

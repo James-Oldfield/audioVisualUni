@@ -34,9 +34,12 @@ public void setup() {
 public void draw() {
 	s = new PVector(2,3);
 	myImage.filter(BLUR, 1);
+
 	pos.add(vel);
 	s.add(speed);
+
 	scale(s.x, s.y);
+
 	translate(pos.x, pos.y);
 	image(myImage, 0,0, 100, 200);
 }

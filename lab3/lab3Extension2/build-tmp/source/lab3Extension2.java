@@ -105,7 +105,7 @@ public void loadNodes(){
 }
 
 public void updateNodes(){
-	i+= .05f;
+	i += .05f;
 	for (int x = 0; x < tileCount+1; x++) {
 		for (int y = 0; y <= tileCount; y++) {
 			nodes[x][y].z = sin(x+i) * 20;			
