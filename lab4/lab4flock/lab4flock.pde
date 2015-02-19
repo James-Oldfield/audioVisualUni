@@ -8,6 +8,11 @@ float percDis     = 50;
 float percAngle   = PI;
 float percMinDist = 5;
 
+// weight to attract/repel with
+float alignWeight = 1;
+float cohWeight = .5;
+float sepWeight = .2;
+
 ArrayList<Boid> boids = new ArrayList<Boid>();
 
 void setup() {
@@ -22,6 +27,7 @@ void setup() {
 void draw() {
 	background(255);
 	for (Boid b : boids) {
+		b.update(b.getNeighbors(boids));
 	  b.display();
 	}
 }
@@ -52,12 +58,12 @@ class Boid {
 		// Used to store difference in location
 		PVector locDif = new PVector();
 
-		if(b == this) {
-			// Determines whether the boid being compared is the same as the comparison boid - this refers to the current object in context, ie. the one being compared.
-			continue;
-		} 
-
-		for (Boid b : boids) {
+		for (int i=0; i<boids.size(); i++) {
+			Boid b = (Boid)boids.get(i);
+			if(b == this) {
+				// Determines whether the boid being compared is the same as the comparison boid - this refers to the current object in context, ie. the one being compared.
+				continue;
+			} 
 			// set location difference to other boids' location
 		  locDif = b.loc;
 		  locDif.sub(loc);
@@ -90,7 +96,9 @@ class Boid {
 							sep      = new PVector();
 
 			// all boids in neighbors
-			for (Boid b : neighbors) {
+			for (int i=0; i<neighbors.size(); i++) {
+				Boid b = (Boid)neighbors.get(i);
+
 				locDif.set(b.loc);
 				locDif.sub(loc);
 
@@ -98,7 +106,7 @@ class Boid {
 				velDif.sub(vel);
 
 				// Add these
-				align.add(velocity);
+				align.add(velDif);
 				cohesion.add(locDif);
 				if(locDif.mag() < percMinDist) {
 					// if it's too small
@@ -106,20 +114,28 @@ class Boid {
 				}
 
 				// if not zero, normalise these vectors
-				if(!align.mag() == 0) {
+				if(align.mag() > 0) {
 					align.normalize();
 				}
-				if(!cohesion.mag() == 0) {
+				if(cohesion.mag() > 0) {
 					cohesion.normalize();
 				}
-				if(!sep.mag() == 0) {
+				if(sep.mag() > 0) {
 					sep.normalize();
 				}
 
 				align.mult(alignWeight);
 				cohesion.mult(cohWeight);
 				sep.mult(sepWeight);
+
+				accel.set(align);
+				accel.add(cohesion);
+
+				// Separation will go in different direction
+				accel.sub(sep);
+
+				vel.add(accel);
+				loc.add(vel);
 			}
 		}
 	}
-}

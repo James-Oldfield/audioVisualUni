@@ -16,9 +16,18 @@ public class lab4flock extends PApplet {
 
 // Global variable to dictate size of boid
 float bs = 5.0f;
-
 // Dictate the number of boids
-int nb = 100;
+int nb   = 100;
+
+// used to determine whether a neighbor or not
+float percDis     = 50;
+float percAngle   = PI;
+float percMinDist = 5;
+
+// weight to attract/repel with
+float alignWeight = 1;
+float cohWeight = .5f;
+float sepWeight = .2f;
 
 ArrayList<Boid> boids = new ArrayList<Boid>();
 
@@ -34,6 +43,7 @@ public void setup() {
 public void draw() {
 	background(255);
 	for (Boid b : boids) {
+		b.update(b.getNeighbors(boids));
 	  b.display();
 	}
 }
@@ -56,7 +66,95 @@ class Boid {
 			triangle(-bs/2, bs/2, bs/2, 0, -bs/2, -bs/2);
 		popMatrix();
 	}
-}
+
+	// Takes an arraylist of boids and returns an arraylist of neighbors
+	public ArrayList getNeighbors(ArrayList boids) {
+		ArrayList<Boid> neighbors = new ArrayList<Boid>();
+
+		// Used to store difference in location
+		PVector locDif = new PVector();
+
+		for (int i=0; i<boids.size(); i++) {
+			Boid b = (Boid)boids.get(i);
+			if(b == this) {
+				// Determines whether the boid being compared is the same as the comparison boid - this refers to the current object in context, ie. the one being compared.
+				continue;
+			} 
+			// set location difference to other boids' location
+		  locDif = b.loc;
+		  locDif.sub(loc);
+
+			// if the boid is not a neighbour, ignore this
+		  if(locDif.mag() > percDis) {
+		  	continue;
+		  }
+
+			// If it's outside the perception angle to flock with, this is not a neighbor
+		  if(PVector.angleBetween(vel, locDif) > percAngle) {
+				continue;
+		  }
+
+		  // by now, the rest of the neighbors are ones that we want, so return the rest as an ArrayList
+		  neighbors.add(b);
+		}
+
+		  return neighbors;
+		}
+
+		public void update(ArrayList neighbors) {
+			// receives an arraylist of neighbors
+
+			// local PVectors to compute
+			PVector locDif   = new PVector(),
+							velDif   = new PVector(),
+							align    = new PVector(),
+							cohesion = new PVector(),
+							sep      = new PVector();
+
+			// all boids in neighbors
+			for (int i=0; i<neighbors.size(); i++) {
+				Boid b = (Boid)neighbors.get(i);
+
+				locDif.set(b.loc);
+				locDif.sub(loc);
+
+				velDif.set(b.vel);
+				velDif.sub(vel);
+
+				// Add these
+				align.add(velDif);
+				cohesion.add(locDif);
+				if(locDif.mag() < percMinDist) {
+					// if it's too small
+					sep.add(locDif);
+				}
+
+				// if not zero, normalise these vectors
+				if(align.mag() > 0) {
+					align.normalize();
+				}
+				if(cohesion.mag() > 0) {
+					cohesion.normalize();
+				}
+				if(sep.mag() > 0) {
+					sep.normalize();
+				}
+
+				align.mult(alignWeight);
+				cohesion.mult(cohWeight);
+				sep.mult(sepWeight);
+
+				accel.set(align);
+				accel.add(cohesion);
+
+				// Separation will go in different direction
+				accel.sub(sep);
+
+				vel.add(accel);
+				loc.add(vel);
+			}
+		}
+	}
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "lab4flock" };
     if (passedArgs != null) {
