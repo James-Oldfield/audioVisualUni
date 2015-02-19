@@ -17,7 +17,7 @@ public class lab4flock extends PApplet {
 // Global variable to dictate size of boid
 float bs = 5.0f;
 // Dictate the number of boids
-int nb   = 100;
+int nb   = 1000;
 
 // used to determine whether a neighbor or not
 float percDis     = 20;
@@ -26,13 +26,13 @@ float percMinDist = 100;
 
 // weight to attract/repel with
 float alignWeight = .5f;
-float cohWeight = .25f;
-float sepWeight = .1f;
+float cohWeight   = .025f;
+float sepWeight   = .01f;
 
 ArrayList<Boid> boids = new ArrayList<Boid>();
 
 public void setup() {
-	size(500, 500);
+	size(750, 750);
 
 	for(int i = 0; i < nb; i++) {
 		Boid b = new Boid();
@@ -51,7 +51,7 @@ public void draw() {
 
 class Boid {
 	PVector loc, vel, accel;
-	float velVal = 5;
+	float velVal = 1;
 
 	Boid() {
 		loc = new PVector(random(width), random(height));
@@ -74,6 +74,17 @@ class Boid {
 
 		// Used to store difference in location
 		PVector locDif = new PVector();
+
+	// KEEP ON SCREEN
+		if(loc.x < 0) {
+			loc.x = width;
+		} if (loc.x > width) {
+			loc.x = 0;
+		} if (loc.y < 0) {
+			loc.y = height;
+		} if (loc.y > height) {
+			loc.y = 0;
+		}
 
 		for (int i=0; i<boids.size(); i++) {
 			Boid b = (Boid)boids.get(i);

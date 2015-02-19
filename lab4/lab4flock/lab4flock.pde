@@ -1,7 +1,7 @@
 // Global variable to dictate size of boid
 float bs = 5.0;
 // Dictate the number of boids
-int nb   = 100;
+int nb   = 1000;
 
 // used to determine whether a neighbor or not
 float percDis     = 20;
@@ -10,13 +10,13 @@ float percMinDist = 100;
 
 // weight to attract/repel with
 float alignWeight = .5;
-float cohWeight = .25;
-float sepWeight = .1;
+float cohWeight   = .025;
+float sepWeight   = .01;
 
 ArrayList<Boid> boids = new ArrayList<Boid>();
 
 void setup() {
-	size(500, 500);
+	size(750, 750);
 
 	for(int i = 0; i < nb; i++) {
 		Boid b = new Boid();
@@ -35,7 +35,7 @@ void draw() {
 
 class Boid {
 	PVector loc, vel, accel;
-	float velVal = 5;
+	float velVal = 1;
 
 	Boid() {
 		loc = new PVector(random(width), random(height));
@@ -58,6 +58,17 @@ class Boid {
 
 		// Used to store difference in location
 		PVector locDif = new PVector();
+
+	// KEEP ON SCREEN
+		if(loc.x < 0) {
+			loc.x = width;
+		} if (loc.x > width) {
+			loc.x = 0;
+		} if (loc.y < 0) {
+			loc.y = height;
+		} if (loc.y > height) {
+			loc.y = 0;
+		}
 
 		for (int i=0; i<boids.size(); i++) {
 			Boid b = (Boid)boids.get(i);
