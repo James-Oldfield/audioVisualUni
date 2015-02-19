@@ -1,3 +1,5 @@
+// Program written with crucial help about the boids flocking algorithm and program structure from http://www.vonmammen.org/biocaad/2010/01/demos-2d3d-boids-stigmergy-swarm-grammars/
+
 // Global variable to dictate size of boid
 float bs = 5.0;
 // Dictate the number of boids
