@@ -4,14 +4,14 @@ float bs = 5.0;
 int nb   = 100;
 
 // used to determine whether a neighbor or not
-float percDis     = 50;
+float percDis     = 20;
 float percAngle   = PI;
-float percMinDist = 5;
+float percMinDist = 100;
 
 // weight to attract/repel with
-float alignWeight = 1;
-float cohWeight = .5;
-float sepWeight = .2;
+float alignWeight = .5;
+float cohWeight = .25;
+float sepWeight = .1;
 
 ArrayList<Boid> boids = new ArrayList<Boid>();
 
@@ -27,6 +27,7 @@ void setup() {
 void draw() {
 	background(255);
 	for (Boid b : boids) {
+		// pass the returned value of getNeighs method into update method for all boids
 		b.update(b.getNeighbors(boids));
 	  b.display();
 	}
@@ -65,7 +66,7 @@ class Boid {
 				continue;
 			} 
 			// set location difference to other boids' location
-		  locDif = b.loc;
+		  locDif.set(b.loc);
 		  locDif.sub(loc);
 
 			// if the boid is not a neighbour, ignore this
@@ -93,6 +94,7 @@ class Boid {
 							velDif   = new PVector(),
 							align    = new PVector(),
 							cohesion = new PVector(),
+							accel    = new PVector(),
 							sep      = new PVector();
 
 			// all boids in neighbors
@@ -131,7 +133,7 @@ class Boid {
 				accel.set(align);
 				accel.add(cohesion);
 
-				// Separation will go in different direction
+				// Separation will go in different direction, therefore subtract
 				accel.sub(sep);
 
 				vel.add(accel);
