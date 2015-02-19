@@ -2,23 +2,24 @@
 
 // GLOBAL VARIABLES
 // Gravitational constant
-float g = 2;
+float g = .05;
 
 Sun s;
 Planet[] ps = new Planet[10];
 Moon[]   ms = new Moon[10];
 
 void setup() {
-	size(500, 500);
+	size(750, 750);
 
 	s = new Sun(50, color(255, 255, 0));
 
 	for (int i = 0; i < ps.length; i++) {
 		// Randomise location
 		PVector loc = new PVector(random(100, width-100), random(100, height-100));
+		PVector loc2 = new PVector(random(100, width-100)+5, random(100, height-100)+5);
 
 		ps[i] = new Planet(i*5, color(255, 200, 255), loc);
-		ms[i] = new Moon(i*2, color(0, 255, 255), loc);
+		ms[i] = new Moon(i*2, color(0, 255, 255), loc2);
 	}
 }
 
@@ -66,7 +67,7 @@ class Sun {
 		float distance = force.mag();
 
 		// Constrain incase the value is below 1 to prevent extreme outcomes.
-		distance = constrain(distance, 5, 25);
+		distance = constrain(distance, 1, 5);
 
 		// Normalise to find only the direction
 		force.normalize();
@@ -96,8 +97,8 @@ class Planet {
 		myCol = _myCol;
 		mass  = w;
 
-		loc = _loc;
-		vel   = new PVector(2,0);
+		loc   = _loc;
+		vel   = new PVector(2,2);
 		accel = new PVector(0,0);
 	}
 
@@ -109,7 +110,7 @@ class Planet {
 		float distance = force.mag();
 
 		// Constrain incase the value is below 1 to prevent extreme outcomes.
-		distance = constrain(distance, 5, 25);
+		distance = constrain(distance, .05, .075);
 
 		// Normalise to find only the direction
 		force.normalize();
@@ -117,6 +118,9 @@ class Planet {
 		// Compute the strength of gravity using Isaac Newton's formula theorem
 		float strength = (g * mass * m.mass) / (distance * distance);
 		force.mult(strength);
+
+		// Alter moons' gravity to keep up with planets
+		force.div(1000);
 
 		return force;
 	}
@@ -146,6 +150,15 @@ class Moon extends Planet {
 	Moon(int _w, color _myCol, PVector _loc) {
 		// Inherit superclass's constructor
 		super(_w, _myCol, _loc);
+		// vel   = new PVector(2,0);
+		// accel = new PVector(2,0);
 	}
+
+	//*
+	// Moon class remains relatively similar to
+	// Planet class, it inherits everything from 
+	// Planet, only has a different gravitional pull
+	// and also is attracted to planet class.
+	//*
 
 }
