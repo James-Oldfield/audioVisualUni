@@ -1,12 +1,13 @@
-// PLANETARY SYSTEM - Moon extends Planets
+// PLANETARY SYSTEM - Moon and Asteroid extend Planet
 
 // GLOBAL VARIABLES
 // Gravitational constant
 float g = .05;
 
 Sun s;
-Planet[] ps = new Planet[10];
-Moon[]   ms = new Moon[10];
+Planet[]   ps = new Planet[10];
+Moon[]     ms = new Moon[10];
+Asteroid[] as = new Asteroid[10];
 
 void setup() {
 	size(750, 750);
@@ -15,11 +16,13 @@ void setup() {
 
 	for (int i = 0; i < ps.length; i++) {
 		// Randomise location
-		PVector loc = new PVector(random(100, width-100), random(100, height-100));
-		PVector loc2 = new PVector(random(100, width-100)+5, random(100, height-100)+5);
+		PVector planLoc = new PVector(random(100, width-100), random(100, height-100));
+		PVector moonLoc = new PVector(random(100, width-100)+5, random(100, height-100)+5);
+		PVector asterLoc = new PVector(width+ps.length-i*100, 0);
 
-		ps[i] = new Planet(i*5, color(255, 200, 255), loc);
-		ms[i] = new Moon(i*2, color(0, 255, 255), loc2);
+		ps[i] = new Planet(i*5, color(255, 200, 255), planLoc);
+		ms[i] = new Moon(i*2, color(0, 255, 255), moonLoc);
+		as[i] = new Asteroid(i, color(255, 255, 255), asterLoc);
 	}
 }
 
@@ -40,6 +43,9 @@ void draw() {
 		ms[i].applyForce(gravity);
 		ms[i].update();
 		ms[i].display();
+
+		as[i].display();
+		as[i].update();
 	}
 }
 
@@ -150,8 +156,7 @@ class Moon extends Planet {
 	Moon(int _w, color _myCol, PVector _loc) {
 		// Inherit superclass's constructor
 		super(_w, _myCol, _loc);
-		// vel   = new PVector(2,0);
-		// accel = new PVector(2,0);
+			mass  = w/2;
 	}
 
 	//*
@@ -161,4 +166,21 @@ class Moon extends Planet {
 	// and also is attracted to planet class.
 	//*
 
+}
+
+class Asteroid extends Planet {
+	PShape asteroid = loadShape("meteor.svg");
+
+	Asteroid(int _w, color _myCol, PVector _loc) {
+		// Inherit superclass's constructor
+		super(_w, _myCol, _loc);
+	}
+
+	void display() {
+		shape(asteroid, loc.x, loc.y, 200, 100);
+	}
+	void update() {
+		loc.x --;
+		loc.y ++;
+	}
 }
